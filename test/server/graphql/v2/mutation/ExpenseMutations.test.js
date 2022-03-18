@@ -1344,11 +1344,13 @@ describe('server/graphql/v2/mutation/ExpenseMutations', () => {
         const debitTransaction = await getTransaction('DEBIT');
         const expectedFee = Math.round(paymentProcessorFee * debitTransaction.hostCurrencyFxRate);
         expect(debitTransaction.amount).to.equal(-expense.amount + expectedFee);
+        expect(debitTransaction.amountInHostCurrency).to.equal(-expense.amount + expectedFee);
         expect(debitTransaction.netAmountInCollectiveCurrency).to.equal(-expense.amount);
         expect(debitTransaction.paymentProcessorFeeInHostCurrency).to.equal(-expectedFee);
 
         const creditTransaction = await getTransaction('CREDIT');
         expect(creditTransaction.amount).to.equal(expense.amount);
+        expect(creditTransaction.amountInHostCurrency).to.equal(expense.amount);
         expect(creditTransaction.netAmountInCollectiveCurrency).to.equal(expense.amount - expectedFee);
         expect(creditTransaction.paymentProcessorFeeInHostCurrency).to.equal(-expectedFee);
       });
