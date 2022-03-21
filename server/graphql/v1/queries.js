@@ -931,6 +931,10 @@ const queries = {
         description: 'Whether to skip recent accounts (48h)',
         defaultValue: false,
       },
+      countries: {
+        type: new GraphQLList(GraphQLString),
+        description: 'Limit the search to collectives belonging to these countries',
+      },
       limit: {
         type: GraphQLInt,
         description: 'Limit the amount of results. Defaults to 20',
@@ -942,7 +946,7 @@ const queries = {
       },
     },
     async resolve(_, args, req) {
-      const { limit, offset, term, types, isHost, hostCollectiveIds, skipRecentAccounts } = args;
+      const { limit, offset, term, types, isHost, hostCollectiveIds, skipRecentAccounts, countries } = args;
       const cleanTerm = term ? term.trim() : '';
       logger.info(`Search Query: ${cleanTerm}`);
       const listToStr = list => (list ? list.join('_') : '');
@@ -969,6 +973,7 @@ const queries = {
           hostCollectiveIds,
           isHost,
           skipRecentAccounts,
+          countries,
         });
         return generateResults(collectives, total);
       }
