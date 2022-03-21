@@ -395,6 +395,11 @@ function defineModel() {
       await models.TransactionSettlement.markExpenseAsSettled(this);
     }
 
+    if (this.RecurringExpenseId) {
+      const recurringExpense = await this.getRecurringExpense();
+      await recurringExpense.update({ lastPaidAt: new Date() });
+    }
+
     try {
       await this.createContributorMember();
     } catch (e) {
